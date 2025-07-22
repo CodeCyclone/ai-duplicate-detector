@@ -40,6 +40,7 @@ import logging
 
 import os
 from openai import OpenAI
+from openai import AzureOpenAI
 import numpy as np
 
 from embedding_store import EmbeddingStore
@@ -84,20 +85,18 @@ class DuplicateDetector:
 
         self.api_key = api_key or os.environ["OPENAI_API_KEY"]
         self.azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-        self.azure_api_type = os.environ.get("AZURE_OPENAI_API_TYPE")
         self.azure_api_version = os.environ.get("AZURE_OPENAI_API_VERSION")
         self.azure_deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT")
 
         self.store = EmbeddingStore()
         self.embedder = IssueEmbedder(api_key=self.api_key)
         # Support Azure OpenAI configuration
-        if self.azure_endpoint and self.azure_api_type and self.azure_api_version and self.azure_deployment:
-            self.gpt_client = OpenAI(
+        if self.azure_endpoint and self.azure_api_version and self.azure_deployment:
+            self.gpt_client = AzureOpenAI(
                 api_key=self.api_key,
-                base_url=self.azure_endpoint,
-                api_type=self.azure_api_type,
+                azure_endpoint=self.azure_endpoint,
                 api_version=self.azure_api_version,
-                deployment_id=self.azure_deployment
+                azure_deployment=self.azure_deployment
             )
         else:
             self.gpt_client = OpenAI(api_key=self.api_key)
