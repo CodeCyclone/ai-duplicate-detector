@@ -32,10 +32,10 @@ inputs:
     description: 'Your Azure OpenAI endpoint (e.g., https://<resource-name>.openai.azure.com)'
     required: false
   azure-openai-deployment:
-    description: 'The deployment name containing your model.'
+    description: 'The deployment name containing your model'
     required: false
   azure-openai-version:
-    description: 'API Version (reference "Data plane - inference" from https://learn.microsoft.com/en-us/azure/ai-foundry/openai/reference)'
+    description: 'Azure OpenAI API Version (reference "Data plane - inference" from https://learn.microsoft.com/en-us/azure/ai-foundry/openai/reference)'
     required: false
 
 # Docker container approach
