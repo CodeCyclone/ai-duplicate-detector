@@ -51,7 +51,21 @@ class IssueEmbedder:
                                     environment variable.
         """
         self.api_key = api_key or os.environ["OPENAI_API_KEY"]
-        self.client = OpenAI(api_key=self.api_key)  # Minimal initialization
+        self.azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
+        self.azure_api_type = os.environ.get("AZURE_OPENAI_API_TYPE")
+        self.azure_api_version = os.environ.get("AZURE_OPENAI_API_VERSION")
+        self.azure_deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT")
+
+        if self.azure_endpoint and self.azure_api_type and self.azure_api_version and self.azure_deployment:
+            self.client = OpenAI(
+                api_key=self.api_key,
+                base_url=self.azure_endpoint,
+                api_type=self.azure_api_type,
+                api_version=self.azure_api_version,
+                deployment_id=self.azure_deployment
+            )
+        else:
+            self.client = OpenAI(api_key=self.api_key)
         self.model = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-large")
         self.max_retries = 3
         self.retry_delay = 1  # Initial delay in seconds
